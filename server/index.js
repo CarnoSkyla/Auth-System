@@ -1,5 +1,6 @@
 const express = require('express');
 const router = require('./routes/auth');
+const mongoose = require('mongoose')
 
 const app = express();
 
@@ -11,6 +12,12 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', authRoutes)
 
-app.listen(3000, () => {
-    console.log('Server is running');
-}) 
+mongoose.connect(`mongodb+srv://sibu_auth:carnoskylalabi@cluster0.l0zes.mongodb.net?retryWrites=true&w=majority`)
+.then(() => {
+    app.listen(3000, () => {
+        console.log('Server is running');
+    }) 
+}).catch((e) => {
+    console.log(e)
+})
+
