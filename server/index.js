@@ -4,12 +4,18 @@ const mongoose = require('mongoose')
 
 const app = express();
 
+const verifyToken = require('./routes/verifyToken')
+
 app.use(express.json());
 
 const authRoutes = router;
 
 app.get('/', (req, res) => {
     res.send('Welcome to the Auth System')
+})
+
+app.use('/api/profile', verifyToken, (req, res) => {
+    res.send('This is the profile')
 })
 
 app.use('/api/users', authRoutes)

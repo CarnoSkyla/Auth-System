@@ -2,6 +2,7 @@
     "IsEncrypted": false,
     "Values": {
         "USER_NAME": "sibu_auth",
-        "PASSWORD": "carnoskylalabi"
+        "PASSWORD": "carnoskylalabi",
+        "AUTH_KEY": "SUPERSECRET123"
     }
 }
