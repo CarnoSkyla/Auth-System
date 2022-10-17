@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 
 const app = express();
 
+app.use(express.json());
+
 const authRoutes = router;
 
 app.get('/', (req, res) => {
@@ -12,7 +14,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', authRoutes)
 
-mongoose.connect(`mongodb+srv://sibu_auth:carnoskylalabi@cluster0.l0zes.mongodb.net?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://sibu_auth:carnoskylalabi@cluster0.l0zes.mongodb.net/auth_system?retryWrites=true&w=majority`)
 .then(() => {
     app.listen(3000, () => {
         console.log('Server is running');
