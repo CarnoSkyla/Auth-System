@@ -2,6 +2,12 @@ import React from 'react'
 import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, Image, TextInput, TouchableOpacity, Platform } from 'react-native'
 
 import { Formik } from 'formik'
+import * as yup from 'yup'
+
+const formSchema = yup.object({
+    email: yup.string().email().required(),
+    password: yup.string().required().min(6)
+})
 
 const LoginScreen = navData => {
     return (
@@ -9,6 +15,7 @@ const LoginScreen = navData => {
             <Formik
                 initialValues={{ email: "", password: "" }}
                 onSubmit={(values) => { console.log(values) }}
+                validationSchema={formSchema}
             >
                 {(props) => (
                     <View style={styles.container}>
@@ -22,7 +29,9 @@ const LoginScreen = navData => {
                                 style={styles.inputContainer}
                                 onChangeText={props.handleChange('email')}
                                 value={props.values.email}
-                            /> 
+                                onBlur={props.handleBlur('email')}
+                            />
+                            <Text style={styles.errorText}>{props.touched.email && props.errors.email}</Text>
                             <TextInput
                                 placeholder='Password'
                                 placeholderTextColor='#fff'
@@ -30,7 +39,9 @@ const LoginScreen = navData => {
                                 style={styles.inputContainer}
                                 onChangeText={props.handleChange('password')}
                                 value={props.values.password}
+                                onBlur={props.handleBlur('password')}
                             />
+                            <Text style={styles.errorText}>{props.touched.password && props.errors.password}</Text>
                             <TouchableOpacity onPress={props.handleSubmit} style={styles.button}>
                                 <Text style={styles.buttonText}>Login</Text>
                             </TouchableOpacity>
@@ -104,6 +115,9 @@ const styles = StyleSheet.create({
         color: '#738289',
         fontSize: 16,
         fontWeight: 'bold'
+    },
+    errorText: {
+        color: 'red'
     }
 })
 
