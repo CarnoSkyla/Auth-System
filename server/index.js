@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/profile', verifyToken, (req, res) => {
-    res.send('This is the profile')
+    res.send({success: true, data: req.user})
 })
 
 app.use('/api/users', authRoutes)
