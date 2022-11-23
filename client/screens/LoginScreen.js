@@ -14,7 +14,7 @@ const LoginScreen = navData => {
         <KeyboardAvoidingView behavior={Platform.OS == 'android' ? 'height' : 'padding'} style={styles.keyboard}>
             <Formik
                 initialValues={{ email: "", password: "" }}
-                onSubmit={(values) => { console.log(values) }}
+                onSubmit={(values) => navData.navigation.navigate('HomeScreen')}
                 validationSchema={formSchema}
             >
                 {(props) => (

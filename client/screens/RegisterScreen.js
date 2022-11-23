@@ -1,14 +1,23 @@
 import React from 'react'
-import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Image, TextInput } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Image, TextInput, Platform } from 'react-native'
 
 import { Formik } from 'formik';
 
+import * as yup from 'yup'
+
+const formSchema = yup.object({
+    fullName: yup.string().required().min(3),
+    email: yup.string().email().required(),
+    password: yup.string().required().min(6)
+})
+
 const RegisterScreen = navData => {
     return (
-        <KeyboardAvoidingView behavior='padding' style={styles.keyboard}>
+        <KeyboardAvoidingView behavior={Platform.OS == 'android' ? 'height' : 'padding'} style={styles.keyboard}>
             <Formik
                 initialValues={{ fullName: "", email: "", password: "" }}
                 onSubmit={(values) => navData.navigation.navigate('HomeScreen')}
+                validationSchema={formSchema}
             >
                 {(props) => (
                     <View style={styles.container}>
@@ -17,27 +26,33 @@ const RegisterScreen = navData => {
                         </View>
                         <View>
                             <TextInput
-                                placeholder='Name'
+                                placeholder='Full Name'
                                 placeholderTextColor='#fff'
                                 style={styles.inputContainer}
                                 onChangeText={props.handleChange('fullName')}
+                                onBlur={props.handleBlur('fullName')}
                                 value={props.values.fullName}
                             />
+                            <Text style={styles.errorText}>{props.touched.fullName && props.errors.fullName}</Text>
                             <TextInput
                                 placeholder='Email'
                                 placeholderTextColor='#fff'
                                 style={styles.inputContainer}
                                 onChangeText={props.handleChange('email')}
+                                onBlur={props.handleBlur('email')}
                                 value={props.values.email}
                             />
+                            <Text style={styles.errorText}>{props.touched.email && props.errors.email}</Text>
                             <TextInput
                                 placeholder='Password'
                                 placeholderTextColor='#fff'
                                 secureTextEntry={true}
                                 style={styles.inputContainer}
+                                onBlur={props.handleBlur('password')}
                                 onChangeText={props.handleChange('password')}
                                 value={props.values.password}
                             />
+                            <Text style={styles.errorText}>{props.touched.password && props.errors.password}</Text>
                             <TouchableOpacity onPress={props.handleSubmit} style={styles.button}>
                                 <Text style={styles.buttonText}>Register</Text>
                             </TouchableOpacity>
@@ -111,6 +126,9 @@ const styles = StyleSheet.create({
         color: '#738289',
         fontSize: 16,
         fontWeight: 'bold'
+    },
+    errorText: {
+        color: 'red'
     }
 })
 
