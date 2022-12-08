@@ -5,6 +5,10 @@ import { Formik } from 'formik';
 
 import * as yup from 'yup'
 
+import * as authAction from '../redux/actions/authAction';
+
+import { useDispatch } from 'react-redux'
+
 const formSchema = yup.object({
     fullName: yup.string().required().min(3),
     email: yup.string().email().required(),
@@ -12,11 +16,22 @@ const formSchema = yup.object({
 })
 
 const RegisterScreen = navData => {
+
+    const dispatch = useDispatch();
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS == 'android' ? 'height' : 'padding'} style={styles.keyboard}>
             <Formik
                 initialValues={{ fullName: "", email: "", password: "" }}
-                onSubmit={(values) => navData.navigation.navigate('HomeScreen')}
+                onSubmit={
+                    (values) => {
+                        dispatch(authAction.registerUser(values))
+                        .then(() => {
+                            navData.navigation.navigate('HomeScreen')
+                        })
+                        .catch((err) => console.log(err))
+                    }
+                }
                 validationSchema={formSchema}
             >
                 {(props) => (
