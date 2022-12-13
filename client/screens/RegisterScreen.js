@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Image, TextInput, Platform } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Image, TextInput, Platform, Alert } from 'react-native'
 
 import { Formik } from 'formik';
 
@@ -26,8 +26,12 @@ const RegisterScreen = navData => {
                 onSubmit={
                     (values) => {
                         dispatch(authAction.registerUser(values))
-                        .then(() => {
-                            navData.navigation.navigate('HomeScreen')
+                        .then((result) => {
+                            if (result.success) {
+                                navData.navigation.navigate('HomeScreen')
+                            } else {
+                                Alert.alert(result.message)
+                            }
                         })
                         .catch((err) => console.log(err))
                     }

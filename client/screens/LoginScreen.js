@@ -1,8 +1,12 @@
 import React from 'react'
-import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, Image, TextInput, TouchableOpacity, Platform } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, Image, TextInput, TouchableOpacity, Platform, Alert } from 'react-native'
 
 import { Formik } from 'formik'
 import * as yup from 'yup'
+
+import { useDispatch } from 'react-redux'
+
+import * as authAction from '../redux/actions/authAction';
 
 const formSchema = yup.object({
     email: yup.string().email().required(),
@@ -10,11 +14,26 @@ const formSchema = yup.object({
 })
 
 const LoginScreen = navData => {
+
+    const dispatch = useDispatch();
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS == 'android' ? 'height' : 'padding'} style={styles.keyboard}>
             <Formik
                 initialValues={{ email: "", password: "" }}
-                onSubmit={(values) => navData.navigation.navigate('HomeScreen')}
+                onSubmit={
+                    (values) => {
+                        dispatch(authAction.loginUser(values))
+                        .then((result) => {
+                            if (result.success) {
+                                navData.navigation.navigate('HomeScreen')
+                            } else {
+                                Alert.alert(result.message)
+                            }
+                        })
+                        .catch((err) => console.log(err))
+                    }
+                }
                 validationSchema={formSchema}
             >
                 {(props) => (

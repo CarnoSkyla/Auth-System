@@ -21,12 +21,21 @@ export const registerUser = authData => {
             })
         })
 
-        const json = await result.json();
+        const resultData = await result.json();
 
-        dispatch({
-            type: REGISTER_USER_SUCCESS,
-            payload: json
-        })
+        if (resultData.success) {
+            dispatch({
+                type: REGISTER_USER_SUCCESS,
+                payload: resultData
+            })
+        } else {
+            dispatch({
+                type: REGISTER_USER_FAIL,
+                payload: resultData
+            })
+        }
+
+        return resultData;
     }
 }
 
@@ -34,9 +43,31 @@ export const loginUser = authData => {
     const { email, password } = authData;
 
     return async dispatch => {
-        dispatch({
-            type: LOGIN_USER_SUCCESS,
-            payload: 1
+        const result = await fetch(`${BASE_URL}/api/users/login`, {
+            method: 'POST',
+            headers: {
+                'CONTENT-TYPE': 'application/json'
+            },
+            body: JSON.stringify({
+                email, 
+                password
+            })
         })
+
+        const resultData = await result.json();
+
+        if (resultData.success) {
+            dispatch({
+                type: LOGIN_USER_SUCCESS,
+                payload: resultData
+            })
+        } else {
+            dispatch({
+                type: LOGIN_USER_FAIL,
+                payload: resultData
+            })
+        }
+
+        return resultData;
     }
 }
