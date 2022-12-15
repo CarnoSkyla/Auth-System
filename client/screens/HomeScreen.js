@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react'
 
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Button } from 'react-native'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import jwtDecode from 'jwt-decode'
 
 
-const HomeScreen = () => {
+const HomeScreen = props => {
 
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
@@ -23,6 +23,16 @@ const HomeScreen = () => {
         loadProfile()
     })
 
+    const logout = async (props) => {
+        await AsyncStorage.removeItem('token')
+        .then(() => {
+            props.navigation.replace('LoginScreen')
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
     return (
         <View>
             <View>
@@ -30,6 +40,9 @@ const HomeScreen = () => {
             </View>
             <View>
                 <Text>Your email is: {email}</Text>
+            </View>
+            <View>
+                <Button title={'Logout'} onPress={() => logout(props)}/>
             </View>
         </View>
     )
